@@ -15,8 +15,12 @@ import java.util.Optional;
 @RequestMapping("/books")
 public class BookController {
 
+    private final BookService bookService;
+
     @Autowired
-    private BookService bookService;
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     // Retrieve all books
     @GetMapping
