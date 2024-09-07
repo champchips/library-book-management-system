@@ -4,10 +4,8 @@ import com.task.library_book_management_system.entity.Book;
 import com.task.library_book_management_system.repository.BookRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -17,21 +15,20 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class BookServiceTest {
+class BookServiceTest {
 
-    @Mock
+    @MockBean
     private BookRepository bookRepository;
 
-    @InjectMocks
     private BookService bookService;
 
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
+    void setUp() {
+        bookService = new BookService(bookRepository);
     }
 
     @Test
-    public void testGetAllBooks() {
+    void testGetAllBooks() {
         Book book1 = new Book(1L, "Title1", "Author1", "ISBN1", null);
         Book book2 = new Book(2L, "Title2", "Author2", "ISBN2", null);
         when(bookRepository.findAll()).thenReturn(Arrays.asList(book1, book2));
@@ -40,7 +37,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testAddBook() {
+    void testAddBook() {
         Book book = new Book(1L, "Title1", "Author1", "ISBN1", null);
         when(bookRepository.save(any(Book.class))).thenReturn(book);
 
@@ -48,7 +45,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testGetBookById() {
+    void testGetBookById() {
         Book book = new Book(1L, "Title1", "Author1", "ISBN1", null);
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
 
@@ -57,7 +54,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testUpdateBook() {
+    void testUpdateBook() {
         Book existingBook = new Book(1L, "Old Title", "Old Author", "Old ISBN", null);
         Book updatedBook = new Book(1L, "New Title", "New Author", "New ISBN", null);
 
@@ -68,7 +65,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testUpdateBookNotFound() {
+    void testUpdateBookNotFound() {
         Book updatedBook = new Book(1L, "New Title", "New Author", "New ISBN", null);
 
         when(bookRepository.findById(1L)).thenReturn(Optional.empty());
@@ -78,7 +75,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testDeleteBook() {
+    void testDeleteBook() {
         doNothing().when(bookRepository).deleteById(1L);
 
         bookService.deleteBook(1L);

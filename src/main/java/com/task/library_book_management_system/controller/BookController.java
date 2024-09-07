@@ -3,7 +3,6 @@ package com.task.library_book_management_system.controller;
 
 import com.task.library_book_management_system.entity.Book;
 import com.task.library_book_management_system.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +16,6 @@ public class BookController {
 
     private final BookService bookService;
 
-    @Autowired
     public BookController(BookService bookService) {
         this.bookService = bookService;
     }

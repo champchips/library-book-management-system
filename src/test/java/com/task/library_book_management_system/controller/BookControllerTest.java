@@ -2,18 +2,15 @@ package com.task.library_book_management_system.controller;
 
 import com.task.library_book_management_system.entity.Book;
 import com.task.library_book_management_system.service.BookService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.time.LocalDate;
@@ -32,22 +29,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @EnableWebMvc
 @ExtendWith(MockitoExtension.class)
-public class BookControllerTest {
+class BookControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private BookService bookService;
-    @InjectMocks
-    private BookController bookController;
-
-    @BeforeEach
-    void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(bookController).build();
-    }
 
     @Test
-    public void testGetAllBooks() throws Exception {
+    void testGetAllBooks() throws Exception {
         Book book1 = new Book(1L, "Title1", "Author1", "123-456-789", LocalDate.of(2024, 1, 1));
         Book book2 = new Book(2L, "Title2", "Author2", "987-654-321", LocalDate.of(2024, 2, 1));
         when(bookService.getAllBooks()).thenReturn(Arrays.asList(book1, book2));
@@ -58,7 +48,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void testGetBookById() throws Exception {
+    void testGetBookById() throws Exception {
         Book book = new Book(1L, "Title1", "Author1", "123-456-789", LocalDate.of(2024, 1, 1));
         when(bookService.getBookById(anyLong())).thenReturn(Optional.of(book));
 
@@ -68,7 +58,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void testGetBookByIdNotFound() throws Exception {
+    void testGetBookByIdNotFound() throws Exception {
         when(bookService.getBookById(anyLong())).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/books/1"))
@@ -76,7 +66,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void testCreateBook() throws Exception {
+    void testCreateBook() throws Exception {
         Book savedBook = new Book(1L, "Title1", "Author1", "123-456-789", LocalDate.of(2024, 1, 1));
         when(bookService.addBook(any(Book.class))).thenReturn(savedBook);
 
@@ -88,7 +78,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void testUpdateBook() throws Exception {
+    void testUpdateBook() throws Exception {
         Book book = new Book(1L, "Updated Title", "Updated Author", "987-654-321", LocalDate.of(2024, 2, 1));
         when(bookService.updateBook(anyLong(), any(Book.class))).thenReturn(book);
 
@@ -100,7 +90,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void testUpdateBookNotFound() throws Exception {
+    void testUpdateBookNotFound() throws Exception {
         when(bookService.updateBook(anyLong(), any(Book.class))).thenThrow(new RuntimeException("Book not found"));
 
         mockMvc.perform(put("/books/1")
@@ -110,7 +100,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void testDeleteBook() throws Exception {
+    void testDeleteBook() throws Exception {
         Mockito.doNothing().when(bookService).deleteBook(1L);
 
         mockMvc.perform(delete("/books/1"))
@@ -118,7 +108,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void testDeleteBookNotFound() throws Exception {
+    void testDeleteBookNotFound() throws Exception {
         Mockito.doThrow(new RuntimeException("Book not found")).when(bookService).deleteBook(1L);
 
         mockMvc.perform(delete("/books/1"))
